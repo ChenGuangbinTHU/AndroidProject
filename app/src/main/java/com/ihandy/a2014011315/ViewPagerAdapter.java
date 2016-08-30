@@ -4,8 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
-
-import java.util.ArrayList;
 import java.util.Vector;
 
 /**
@@ -18,19 +16,9 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter{
 
     public ViewPagerAdapter(FragmentManager fm){
         super(fm);
-//        titleList.add("tab1");
-//        titleList.add("tab2");
-//        titleList.add("tab3");
-//        titleList.add("tab4");
-//        titleList.add("tab5");
-//        titleList.add("tab6");
-//        titleList.add("tab7");
-
-        News n = new News();
+        NewsClassify n = new NewsClassify();
         long longTime = System.currentTimeMillis();
         String time = String.valueOf(longTime);
-        //System.out.println(time);
-        //Log.d("adebug",time);
         n.setURL(time);
         Thread t = new Thread(n);
         t.start();
@@ -52,7 +40,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter{
 
     @Override
     public Fragment getItem(int position) {
-        return TabFragment.newInstance(position+1);
+        return TabFragment.newInstance(position);
     }
 
     @Override
