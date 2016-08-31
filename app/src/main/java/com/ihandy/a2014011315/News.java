@@ -5,8 +5,6 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -32,6 +30,11 @@ public class News implements Runnable{
 
     private String test = "";
 
+
+    public Vector<JSONNews> getJsonNewsVector()
+    {
+        return jsonNewsVector;
+    }
 
     public void setURL(String category)
     {
@@ -85,19 +88,16 @@ public class News implements Runnable{
 
             for(int i = 0;i < jsonArray.length();i++)
             {
-                //Log.d("fuck_news","1");
                 JSONNews jsonNews = new JSONNews();
 
                 JSONObject news =  jsonArray.getJSONObject(i);
 
                 Log.d("fuck_news",news.toString());
 
-                //Log.d("fuck_news","2");
                 jsonNews.setNewsCategory(news.getString("category"));
                 jsonNews.setNewsCountry(news.getString("country"));
                 jsonNews.setNewsFetchedTime(news.getLong("fetched_time"));
 
-                //Log.d("fuck_news",news.getString("fetch_time"));
 
                 JSONArray jsonImg = news.getJSONArray("imgs");
                 String []newImgsUrl = new String[10];
