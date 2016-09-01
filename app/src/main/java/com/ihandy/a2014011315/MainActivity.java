@@ -1,5 +1,7 @@
 package com.ihandy.a2014011315;
 
+import android.database.sqlite.SQLiteDatabase;
+import android.provider.ContactsContract;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        SQLiteDatabase db = Database.getInstance(this);
 
         setContentView(R.layout.activity_main);
         tabLayout = (TabLayout)findViewById(R.id.tabs);

@@ -1,5 +1,10 @@
 package com.ihandy.a2014011315;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
 import org.json.JSONObject;
 
 /**
@@ -17,7 +22,12 @@ public class JSONNews {
     private String newsSourceName;
     private String newsSourceUrl;
     private String newsTitle;
+    private byte[] imageByte;
     private long newsUpdateTime;
+
+    public void setImageByte(byte[] imageByte){this.imageByte = imageByte;}
+
+    public byte[] getImageByte(){return  imageByte;}
 
     public String getNewsCategory() {
         return newsCategory;
@@ -112,5 +122,34 @@ public class JSONNews {
         String s = "";
         s = s + newsCategory + "--" + newsCountry + "--" + newsId + "--" + newsLocaleCategory + "--" + newsOrigin + "--" + newsOrigin + "--" + newsSourceName + "--" + newsSourceUrl + "--" + newsTitle + "--" + newsUpdateTime + "--" + newsFetchedTime + "--" + newsImgsUrl +"--";
         return s;
+    }
+
+    public void saveToDatabase(SQLiteDatabase db)
+    {
+        ContentValues cv = new ContentValues();
+        cv.put("category",newsCategory);
+        cv.put("country",newsCountry);
+        cv.put("fetchedTime",String.valueOf(newsFetchedTime));
+        cv.put("newsId",newsId);
+        cv.put("localeCategory",newsLocaleCategory);
+        cv.put("origin",newsOrigin);
+        cv.put("sourceName",newsSourceName);
+        cv.put("sourceUrl",newsSourceUrl);
+        cv.put("title",newsTitle);
+        cv.put("updateTime",String.valueOf(newsUpdateTime));
+        cv.put("imgsUrl",newsImgsUrl[0]);
+        cv.put("imageByte",imageByte);
+
+        Cursor c = db.query("news",null,"newsId=?",new String[]{newsId},null,null,null,null);
+
+        if(c.moveToFirst() == false)
+        {
+            db.insert("news",null,cv);
+            Log.d("fuck_save","query if");
+        }
+        else
+            Log.d("fuck_save","query else");
+
+
     }
 }
