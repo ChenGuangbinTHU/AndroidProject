@@ -1,6 +1,7 @@
 package com.ihandy.a2014011315;
 
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.Vector;
@@ -73,7 +75,7 @@ public class TabFragment extends Fragment {
 
 
 
-        //Cursor newsCursor = Database.getInstance(ll.getContext()).query("news",null,"category=?",new String[]{getArguments().getString("category")},null,null,null,null);
+        Cursor newsCursor = Database.getInstance(ll.getContext()).query("news",null,"category=?",new String[]{getArguments().getString("category")},null,null,null,null);
         /*
         for(int i = 0;i < newsVector.size();i++)
         {
@@ -91,8 +93,8 @@ public class TabFragment extends Fragment {
         }
         */
 
-//        while(newsCursor.moveToNext())
-//        {
+        while(newsCursor.moveToNext())
+        {
 //            TextView tv = new TextView(ll.getContext());
 //            tv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,200));
 //            tv.setVisibility(View.VISIBLE);
@@ -101,7 +103,22 @@ public class TabFragment extends Fragment {
 //            tv.setText(newsCursor.getString(10));
 //            //newsCursor.get
 //            ll.addView(tv);
-//        }
+//            Bitmap b = ImageByte.getBitmapFromByte(newsCursor.getBlob(12));
+//            ImageView iv = new ImageView(ll.getContext());
+//            iv.setImageBitmap(b);
+//            ll.addView(iv);
+
+            View newsView = inflater.inflate(R.layout.news,container,false);
+            TextView newsTextView = (TextView)newsView.findViewById(R.id.textView1);
+            ImageView newsImageView = (ImageView)newsView.findViewById(R.id.imageView1);
+            newsTextView.setText(newsCursor.getString(10));
+           // newsTextView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,200));
+            newsTextView.setVisibility(View.VISIBLE);
+            newsTextView.setTextColor(Color.rgb(0,0,0));
+            newsTextView.setBackgroundColor(Color.rgb(255,255,255));
+            newsImageView.setImageBitmap(ImageByte.getBitmapFromByte(newsCursor.getBlob(12)));
+            ll.addView(newsView);
+        }
 
         return view;
     }

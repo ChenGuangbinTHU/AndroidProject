@@ -1,6 +1,8 @@
 package com.ihandy.a2014011315;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
@@ -84,5 +86,15 @@ public class ImageByte extends Activity implements Runnable
             Log.d("fuck_save",String.valueOf(news.getNewsId()));
         }
     }
+
+    public static Bitmap getBitmapFromByte(byte[] temp){
+        if(temp != null){
+            Bitmap bitmap = BitmapFactory.decodeByteArray(temp, 0, temp.length);
+            return bitmap;
+        }else{
+            return null;
+        }
+    }
+
 }
 

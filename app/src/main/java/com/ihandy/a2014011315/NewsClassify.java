@@ -58,9 +58,6 @@ public class NewsClassify implements Runnable{
             e.printStackTrace();
         }
 
-        //Log.d("fuck","fuck");
-        //jsonTokener = new JSONTokener(result);
-
 
     }
 
