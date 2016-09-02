@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 
 /**
@@ -21,6 +23,8 @@ public class WebNews extends Activity{
 
     private Intent intent;
 
+
+
     @Override
 
 
@@ -33,6 +37,14 @@ public class WebNews extends Activity{
 
         WebView wb = (WebView)findViewById(R.id.webView);
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        ImageButton loveButton = (ImageButton)findViewById(R.id.love);
+        ImageButton shareButton = (ImageButton)findViewById(R.id.share);
+
+
+
+        loveButton.setImageDrawable(getResources().getDrawable(R.mipmap.love));
+        shareButton.setImageDrawable(getResources().getDrawable(R.mipmap.share));
+
         toolbar.setNavigationIcon(R.mipmap.back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,6 +52,9 @@ public class WebNews extends Activity{
                 finish();
             }
         });
+
+        //loveButton.setOnClickListener();
+
 
 
         sourceUrl = intent.getStringExtra("sourceUrl");

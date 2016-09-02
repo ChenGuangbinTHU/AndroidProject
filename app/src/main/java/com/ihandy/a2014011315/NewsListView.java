@@ -67,7 +67,7 @@ public class NewsListView extends Fragment
     public List<Map<String, Object>> getList(){return list;}
 
     private List<Map<String,Object>> getData(){
-        Cursor newsCursor = Database.getInstance(context).query("news",null,"category=?",new String[]{category},null,null,null,null);
+         Cursor newsCursor = Database.getInstance(context).query("news",null,"category=?",new String[]{category},null,null,null,null);
 
 
 

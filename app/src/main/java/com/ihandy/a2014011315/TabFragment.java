@@ -88,6 +88,11 @@ public class TabFragment extends Fragment {
         ImageByte ib = new ImageByte(getImgUrls(),newsVector);
         Thread t = new Thread(ib);
         t.start();
+//        try {
+//            t.join();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         NewsListView nlv = new NewsListView(getActivity(),getArguments().getString("category"),ll.getContext());
         //ll.addView(nlv);
@@ -108,7 +113,7 @@ public class TabFragment extends Fragment {
                 intent.putExtra("sourceUrl",(String)list.get(position).get("sourceUrl"));
                 intent.putExtra("sourceName",(String)list.get(position).get("sourceName"));
                 Log.d("fuck_intent","here!");
-                startActivity(intent);
+                  startActivity(intent);
             }
         });
 

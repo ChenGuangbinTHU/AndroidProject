@@ -9,6 +9,29 @@
         android:layout_height="wrap_content"
         android:id="@+id/toolbar"
         >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/share"
+                 />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/love"
+                android:layout_toRightOf="@+id/share"
+                />
+
+
+
+        </RelativeLayout>
+
     </android.support.v7.widget.Toolbar>
 
     <WebView

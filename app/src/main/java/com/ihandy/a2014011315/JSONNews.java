@@ -139,6 +139,7 @@ public class JSONNews {
         cv.put("updateTime",String.valueOf(newsUpdateTime));
         cv.put("imgsUrl",newsImgsUrl[0]);
         cv.put("imageByte",imageByte);
+        cv.put("love",0);
 
         Cursor c = db.query("news",null,"newsId=?",new String[]{newsId},null,null,null,null);
 

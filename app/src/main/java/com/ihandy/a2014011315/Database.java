@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by bingochen on 2016/9/1.
@@ -29,7 +30,7 @@ public class Database extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         try {
-            db.execSQL("create table news if not exists(id integer primary key," +
+            db.execSQL("create table news(id integer primary key," +
                     "category text," +
                     "country text," +
                     "fetchedTime text, " +
@@ -41,10 +42,12 @@ public class Database extends SQLiteOpenHelper{
                     "sourceUrl text," +
                     "title text," +
                     "updateTime text," +
-                    "imageByte blob" +
+                    "imageByte blob," +
+                    "love integer" +
             ")");
 
         } catch (Exception e) {
+            Log.d("fuck_sqlite","fail");
             e.printStackTrace();
         }
     }
