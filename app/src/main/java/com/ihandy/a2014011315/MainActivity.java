@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
         SQLiteDatabase db = Database.getInstance(this);
 
+
         setContentView(R.layout.activity_main);
         tabLayout = (TabLayout)findViewById(R.id.tabs);
         viewPager = (ViewPager)findViewById(R.id.view_pager);

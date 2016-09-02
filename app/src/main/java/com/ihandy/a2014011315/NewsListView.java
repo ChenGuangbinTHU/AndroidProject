@@ -78,10 +78,14 @@ public class NewsListView extends Fragment
             String title = newsCursor.getString(10);
             String sourceUrl = newsCursor.getString(9);
             String sourceName = newsCursor.getString(8);
+            int love = newsCursor.getInt(13);
+            String newsId = newsCursor.getString(6);
             map.put("imageView1",image);
             map.put("textView1",title);
             map.put("sourceUrl",sourceUrl);
             map.put("sourceName",sourceName);
+            map.put("love",love);
+            map.put("newsId",newsId);
             list.add(map);
         }
         return list;

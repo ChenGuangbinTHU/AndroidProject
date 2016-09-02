@@ -112,8 +112,11 @@ public class TabFragment extends Fragment {
                 Intent intent = new Intent(getActivity(),WebNews.class);
                 intent.putExtra("sourceUrl",(String)list.get(position).get("sourceUrl"));
                 intent.putExtra("sourceName",(String)list.get(position).get("sourceName"));
+                intent.putExtra("love",(int)list.get(position).get("love"));
+
+                intent.putExtra("newsId",(String)list.get(position).get("newsId"));
                 Log.d("fuck_intent","here!");
-                  startActivity(intent);
+                startActivity(intent);
             }
         });
 
