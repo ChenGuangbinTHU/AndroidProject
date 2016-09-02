@@ -1,6 +1,7 @@
 package com.ihandy.a2014011315;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,6 +37,8 @@ public class TabFragment extends Fragment {
     private static Vector<JSONNews> newsVector = new Vector<>();
 
     private ListView newsListView;
+    List<Map<String, Object>> list;
+
 
 
 
@@ -85,58 +89,30 @@ public class TabFragment extends Fragment {
         Thread t = new Thread(ib);
         t.start();
 
-
-
-
-        //Cursor newsCursor = Database.getInstance(ll.getContext()).query("news",null,"category=?",new String[]{getArguments().getString("category")},null,null,null,null);
-        /*
-        for(int i = 0;i < newsVector.size();i++)
-        {
-            JSONNews news = newsVector.get(i);
-            TextView tv = new TextView(ll.getContext());
-            tv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,200));
-            //tv.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-           // tv.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-            Log.d("fuck_view",news.getNewsCategory() + ":" + news.getNewsTitle());
-            tv.setVisibility(View.VISIBLE);
-            tv.setTextColor(Color.rgb(0,0,0));
-            tv.setBackgroundColor(Color.rgb(255,255,255));
-            tv.setText();
-            ll.addView(tv);
-        }
-        */
-/*
-        while(newsCursor.moveToNext())
-        {
-//            TextView tv = new TextView(ll.getContext());
-//            tv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,200));
-//            tv.setVisibility(View.VISIBLE);
-//            tv.setTextColor(Color.rgb(0,0,0));
-//            tv.setBackgroundColor(Color.rgb(255,255,255));
-//            tv.setText(newsCursor.getString(10));
-//            //newsCursor.get
-//            ll.addView(tv);
-//            Bitmap b = ImageByte.getBitmapFromByte(newsCursor.getBlob(12));
-//            ImageView iv = new ImageView(ll.getContext());
-//            iv.setImageBitmap(b);
-//            ll.addView(iv);
-
-            View newsView = inflater.inflate(R.layout.news,container,false);
-            TextView newsTextView = (TextView)newsView.findViewById(R.id.textView1);
-            ImageView newsImageView = (ImageView)newsView.findViewById(R.id.imageView1);
-            newsTextView.setText(newsCursor.getString(10));
-           // newsTextView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,200));
-            newsTextView.setVisibility(View.VISIBLE);
-            newsTextView.setTextColor(Color.rgb(0,0,0));
-            newsTextView.setBackgroundColor(Color.rgb(255,255,255));
-            newsImageView.setImageBitmap(ImageByte.getBitmapFromByte(newsCursor.getBlob(12)));
-            ll.addView(newsView);
-        }
-*/
-        NewsListView nlv = new NewsListView(getArguments().getString("category"),ll.getContext());
+        NewsListView nlv = new NewsListView(getActivity(),getArguments().getString("category"),ll.getContext());
         //ll.addView(nlv);
+
         nlv.init();
-        ll.addView(nlv.getListView());
+
+        ListView listView = nlv.getListView();
+
+        list = nlv.getList();
+
+        listView.setOnItemClickListener(new ListView.OnItemClickListener()
+        {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                Intent intent = new Intent(getActivity(),WebNews.class);
+                intent.putExtra("sourceUrl",(String)list.get(position).get("sourceUrl"));
+                intent.putExtra("sourceName",(String)list.get(position).get("sourceName"));
+                Log.d("fuck_intent","here!");
+                startActivity(intent);
+            }
+        });
+
+        ll.addView(listView);
         return view;
     }
 
@@ -152,15 +128,7 @@ public class TabFragment extends Fragment {
         }
         return urls;
     }
-
-
-
 }
-
-
-
-
-
 
 
 
