@@ -1,5 +1,6 @@
 package com.ihandy.a2014011315;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -10,9 +11,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -25,6 +33,11 @@ public class TabFragment extends Fragment {
     private int m_page;
     private News n;
     private static Vector<JSONNews> newsVector = new Vector<>();
+
+    private ListView newsListView;
+
+
+
 
     public static TabFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -75,7 +88,7 @@ public class TabFragment extends Fragment {
 
 
 
-        Cursor newsCursor = Database.getInstance(ll.getContext()).query("news",null,"category=?",new String[]{getArguments().getString("category")},null,null,null,null);
+        //Cursor newsCursor = Database.getInstance(ll.getContext()).query("news",null,"category=?",new String[]{getArguments().getString("category")},null,null,null,null);
         /*
         for(int i = 0;i < newsVector.size();i++)
         {
@@ -92,7 +105,7 @@ public class TabFragment extends Fragment {
             ll.addView(tv);
         }
         */
-
+/*
         while(newsCursor.moveToNext())
         {
 //            TextView tv = new TextView(ll.getContext());
@@ -119,7 +132,11 @@ public class TabFragment extends Fragment {
             newsImageView.setImageBitmap(ImageByte.getBitmapFromByte(newsCursor.getBlob(12)));
             ll.addView(newsView);
         }
-
+*/
+        NewsListView nlv = new NewsListView(getArguments().getString("category"),ll.getContext());
+        //ll.addView(nlv);
+        nlv.init();
+        ll.addView(nlv.getListView());
         return view;
     }
 
@@ -139,6 +156,11 @@ public class TabFragment extends Fragment {
 
 
 }
+
+
+
+
+
 
 
 
