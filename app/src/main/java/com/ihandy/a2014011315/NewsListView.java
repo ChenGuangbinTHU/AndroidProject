@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +47,50 @@ public class NewsListView extends Fragment
 
     private List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
+    private ListView favoriteListView;
+
+    private List<Map<String, Object>> favoriteList = new ArrayList<Map<String, Object>>();
+
+
+    public ListView getFavoriteListView(){
+        return  favoriteListView;
+    }
+
+    public List<Map<String, Object>> getFavoriteList(){
+        return favoriteList;
+    }
+
+
+    public void initFavorateListView(Context context)
+    {
+        favoriteListView = new ListView(context);
+
+        Cursor c = Database.getInstance(context).query("news",null,"love=?",new String[]{Integer.toString(1)},null,null,null,null);
+
+
+        while(c.moveToNext())
+        {
+            Bitmap image = ImageByte.getBitmapFromByte(c.getBlob(12));
+            Map<String, Object> map = new HashMap<String, Object>();
+            String title = c.getString(10);
+            String sourceUrl = c.getString(9);
+            String sourceName = c.getString(8);
+            int love = c.getInt(13);
+            String newsId = c.getString(6);
+            map.put("imageView1",image);
+            map.put("textView1",title);
+            map.put("sourceUrl",sourceUrl);
+            map.put("sourceName",sourceName);
+            map.put("love",love);
+            map.put("newsId",newsId);
+            favoriteList.add(map);
+        }
+
+        MyAdapter adapter = new MyAdapter(context,favoriteList);
+
+        favoriteListView.setAdapter(adapter);
+    }
+
 
 
     NewsListView(FragmentActivity activity,String category, Context context)
@@ -55,11 +100,13 @@ public class NewsListView extends Fragment
         this.activity = activity;
     }
 
+    NewsListView(){};
+
     public void init()
     {
         listView = new ListView(context);
         mData = getData();
-        MyAdapter adapter = new MyAdapter(context);
+        MyAdapter adapter = new MyAdapter(context,mData);
         listView.setAdapter(adapter);
 
     }
@@ -106,14 +153,17 @@ public class NewsListView extends Fragment
 
         private LayoutInflater mInflater;
 
-        MyAdapter(Context context){
+        private List<Map<String,Object>> data;
+
+        MyAdapter(Context context,List<Map<String,Object>> data){
             this.mInflater = LayoutInflater.from(context);
+            this.data = data;
         }
 
 
         @Override
         public int getCount() {
-            return mData.size();
+            return data.size();
         }
 
         @Override
@@ -141,10 +191,10 @@ public class NewsListView extends Fragment
                 holder = (ViewHolder)convertView.getTag();
             }
 
-            holder.img.setImageBitmap((Bitmap)mData.get(position).get("imageView1"));
-            holder.title.setText((String)mData.get(position).get("textView1"));
-            holder.sourceUrl = (String)mData.get(position).get("sourceUrl");
-            holder.sourceName = (String)mData.get(position).get("sourceName");
+            holder.img.setImageBitmap((Bitmap)data.get(position).get("imageView1"));
+            holder.title.setText((String)data.get(position).get("textView1"));
+            holder.sourceUrl = (String)data.get(position).get("sourceUrl");
+            holder.sourceName = (String)data.get(position).get("sourceName");
             return convertView;
         }
     }

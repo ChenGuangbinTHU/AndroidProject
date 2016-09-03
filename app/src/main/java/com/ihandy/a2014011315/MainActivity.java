@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private TabLayout tabLayout;
     private  ViewPager viewPager;
-    private SlidingMenu mMenu ;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,8 +90,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.favorite) {
+            Intent intent = new Intent(getBaseContext(),FavoriteNews.class);
+            startActivity(intent);
             // Handle the camera action
-        } else if (id == R.id.favorite) {
+        } else if (id == R.id.category_management) {
+
 
         } else if (id == R.id.about_me) {
             Log.d("fuck_nav","send");

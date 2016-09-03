@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1"
-    android:gravity="center">
+    android:gravity="center_horizontal">
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
@@ -15,13 +15,23 @@
     </android.support.v7.widget.Toolbar>
 
 
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/gb"
+        android:id="@+id/gb"
+        android:layout_below="@+id/aboutmebar"
+        android:layout_centerHorizontal="true" />
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/aboutmebar"
+        android:layout_height="wrap_content"
         android:text="陈光斌\ncgb14@mails.tsinghua.edu.cn\n15338909378\n学号2014011315"
         android:gravity="center_horizontal"
-        android:textSize="20sp"/>
+
+        android:textSize="20sp"
+        android:layout_below="@+id/gb"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>
