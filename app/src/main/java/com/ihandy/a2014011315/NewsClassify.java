@@ -14,7 +14,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -27,7 +26,6 @@ public class NewsClassify extends Activity implements Runnable{
     private Vector titles = new Vector();
     private static Vector classify = new Vector();
     private JSONObject jsonObject;
-    private Map<String,String> mapClassify;
 
     public void setURL(String time)
     {
@@ -99,6 +97,7 @@ public class NewsClassify extends Activity implements Runnable{
                 ContentValues cv = new ContentValues();
                 cv.put("category",key);
                 cv.put("watch",1);
+                cv.put("title",value);
                 Cursor c = db.query("category",null,"category=?",new String[]{key},null,null,null,null);
 
                 if(c.moveToFirst() == false)

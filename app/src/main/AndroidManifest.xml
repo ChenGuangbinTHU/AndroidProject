@@ -27,6 +27,7 @@
         <activity android:name=".AboutMe" />
         <activity android:name=".WebNews" />
         <activity android:name=".FavoriteNews" />
+        <activity android:name=".CategoryManager" />
     </application>
 
 

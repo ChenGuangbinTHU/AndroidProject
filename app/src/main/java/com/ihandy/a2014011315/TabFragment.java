@@ -33,14 +33,14 @@ public class TabFragment extends Fragment {
     private ListView newsListView;
     List<Map<String, Object>> list;
 
-
+    Vector<String> classify;
 
 
 
     public static TabFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(args_page, page);
-        args.putString(category,NewsClassify.getClassify().get(page));
+        args.putString(category,Database.getWatchNewsClassify().get(page));
         TabFragment fragment = new TabFragment();
         fragment.setArguments(args);
         return fragment;

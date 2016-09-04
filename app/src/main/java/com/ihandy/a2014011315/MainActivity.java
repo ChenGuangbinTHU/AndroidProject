@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private TabLayout tabLayout;
     private  ViewPager viewPager;
+    ViewPagerAdapter viewPagerAdapter;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tabLayout = (TabLayout)findViewById(R.id.tabs);
         viewPager = (ViewPager)findViewById(R.id.view_pager);
 
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -92,7 +93,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             // Handle the camera action
         } else if (id == R.id.category_management) {
-
+            Intent intent = new Intent(getBaseContext(),CategoryManager.class);
+            startActivity(intent);
 
         } else if (id == R.id.about_me) {
             Log.d("fuck_nav","send");
@@ -103,5 +105,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewPagerAdapter.notifyDataSetChanged();
     }
 }

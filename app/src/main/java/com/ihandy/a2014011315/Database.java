@@ -2,10 +2,13 @@ package com.ihandy.a2014011315;
 
 import android.content.Context;
 //import android.database.sqlite.SQLiteDatabase;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import java.util.Vector;
 
 /**
  * Created by bingochen on 2016/9/1.
@@ -91,6 +94,7 @@ public class Database extends SQLiteOpenHelper implements Runnable{
 
             db.getReadableDatabase().execSQL("create table  if not exists category(id integer primary key," +
                     "category text," +
+                    "title text," +
                     "watch integer" +
                     ")");
             Log.d("fuck","finish create");
@@ -101,4 +105,42 @@ public class Database extends SQLiteOpenHelper implements Runnable{
             Log.d("fuck_sqlite",e.toString());
         }
     }
+
+    public static Vector<String> getWatchNewsClassify()
+    {
+        Vector<String> newsClassify = new Vector<>();
+        Cursor c = db.getReadableDatabase().query("category",null,"watch=?",new String[]{Integer.toString(1)},null,null,null,null);
+        while(c.moveToNext())
+        {
+            String classify = c.getString(1);
+            newsClassify.add(classify);
+        }
+        return newsClassify;
+    }
+
+    public static Vector<String> getWatchNewsTitle()
+    {
+        Vector<String> newsTitle= new Vector<>();
+        Cursor c = db.getReadableDatabase().query("category",null,"watch=?",new String[]{Integer.toString(1)},null,null,null,null);
+        while(c.moveToNext())
+        {
+            String title = c.getString(2);
+            newsTitle.add(title);
+        }
+        return newsTitle;
+    }
+
+    public static Vector<String> getUnWatchNewsTitle()
+    {
+        Vector<String> newsTitle= new Vector<>();
+        Cursor c = db.getReadableDatabase().query("category",null,"watch=?",new String[]{Integer.toString(0)},null,null,null,null);
+        while(c.moveToNext())
+        {
+            String title = c.getString(2);
+            newsTitle.add(title);
+        }
+        return newsTitle;
+    }
+
+
 }

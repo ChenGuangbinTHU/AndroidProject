@@ -12,8 +12,6 @@ import java.util.Vector;
 public class ViewPagerAdapter extends FragmentStatePagerAdapter{
 
 
-    private Vector<String> titleVector = new Vector<>();
-
     public ViewPagerAdapter(FragmentManager fm){
         super(fm);
         NewsClassify n = new NewsClassify();
@@ -30,11 +28,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter{
 
         Log.d("fuck","funish");
 
-        titleVector = n.getTitles();
 
-        for(int i = 0;i < titleVector.size();i++)
+        for(int i = 0;i < Database.getWatchNewsTitle().size();i++)
         {
-            Log.d("titleVector",titleVector.get(i));
+            Log.d("titleVector",Database.getWatchNewsTitle().get(i));
         }
     }
 
@@ -45,19 +42,17 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter{
 
     @Override
     public int getCount() {
-        return titleVector.size();
+        return Database.getWatchNewsTitle().size();
     }
 
     public CharSequence getPageTitle(int position) {
-        return titleVector.get(position);
+        return Database.getWatchNewsTitle().get(position);
     }
 
     public Vector<String> getTitleVector() {
-        return titleVector;
+        return Database.getWatchNewsTitle();
     }
 
-    public void setTitleVector(Vector<String> titleVector) {
-        this.titleVector = titleVector;
-    }
+
 
 }
