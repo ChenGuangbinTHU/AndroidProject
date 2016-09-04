@@ -1,5 +1,9 @@
 package com.ihandy.a2014011315;
 
+import android.app.Activity;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,18 +14,20 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 
 /**
  * Created by bingochen on 2016/8/29.
  */
-public class NewsClassify implements Runnable{
+public class NewsClassify extends Activity implements Runnable{
     private URL url = null;
     private String result;
     private String base_url = "http://assignment.crazz.cn/news/en/category?timestamp=";
     private Vector titles = new Vector();
     private static Vector classify = new Vector();
     private JSONObject jsonObject;
+    private Map<String,String> mapClassify;
 
     public void setURL(String time)
     {
@@ -81,6 +87,7 @@ public class NewsClassify implements Runnable{
             JSONObject jsonCategories = jsonObject.getJSONObject("data");
             JSONObject jsonTitle = jsonCategories.getJSONObject("categories");
             Iterator<String> it = jsonTitle.keys();
+            SQLiteDatabase db = Database.getInstance(getBaseContext());
             while(it.hasNext())
             {
                 String key = (String)it.next();
@@ -89,6 +96,19 @@ public class NewsClassify implements Runnable{
                 String value = jsonTitle.getString(key);
                 //Log.d("fuck_title",value);
                 titles.add(value);
+                ContentValues cv = new ContentValues();
+                cv.put("category",key);
+                cv.put("watch",1);
+                Cursor c = db.query("category",null,"category=?",new String[]{key},null,null,null,null);
+
+                if(c.moveToFirst() == false)
+                {
+                    db.insert("category",null,cv);
+                    Log.d("fuck_save","query if category");
+                }
+                else
+                    Log.d("fuck_save","query else category");
+
             }
         } catch (JSONException e) {
             e.printStackTrace();

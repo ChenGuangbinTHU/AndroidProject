@@ -59,4 +59,5 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter{
     public void setTitleVector(Vector<String> titleVector) {
         this.titleVector = titleVector;
     }
+
 }

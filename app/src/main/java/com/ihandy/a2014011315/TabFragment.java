@@ -13,14 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -70,13 +64,13 @@ public class TabFragment extends Fragment {
         Thread thread = new Thread(n);
         thread.setPriority(9);
         thread.start();
-        try {
-
-            thread.join();
-        } catch (InterruptedException e) {
-            Log.d("fuck","interrupted");
-            e.printStackTrace();
-        }
+//        try {
+//
+//            thread.join();
+//        } catch (InterruptedException e) {
+//            Log.d("fuck","interrupted");
+//            e.printStackTrace();
+//        }
 
         LinearLayout ll = (LinearLayout)view.findViewById(R.id.tab_linear);
 
@@ -88,11 +82,11 @@ public class TabFragment extends Fragment {
         ImageByte ib = new ImageByte(getImgUrls(),newsVector);
         Thread t = new Thread(ib);
         t.start();
-//        try {
-//            t.join();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         NewsListView nlv = new NewsListView(getActivity(),getArguments().getString("category"),ll.getContext());
         //ll.addView(nlv);
@@ -136,6 +130,8 @@ public class TabFragment extends Fragment {
         }
         return urls;
     }
+
+
 }
 
 
