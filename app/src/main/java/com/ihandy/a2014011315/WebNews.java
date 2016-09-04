@@ -78,6 +78,7 @@ public class WebNews extends Activity{
         WebView wb = (WebView)findViewById(R.id.webView);
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
 
+        //Log.d("fuck_intent",sourceUrl);
 
         loveButton = (ImageButton)findViewById(R.id.love);
         shareButton = (ImageButton)findViewById(R.id.share);

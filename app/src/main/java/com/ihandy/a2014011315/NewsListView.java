@@ -2,10 +2,13 @@ package com.ihandy.a2014011315;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,10 +22,16 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 /**
  * Created by bingochen on 2016/9/2.
@@ -30,17 +39,19 @@ import java.util.Map;
 public class NewsListView extends Fragment
 {
 
-    private List<Map<String,Object>> mData;
+    private List<Map<String,Object>> mData = new ArrayList<>();
+
+    private MyAdapter tabadapter;
 
     private String category;
 
     private Context context;
 
-    private ListView listView;
+    private PullToRefreshListView listView;
 
     private FragmentActivity activity;
 
-    public ListView getListView()
+    public PullToRefreshListView getListView()
     {
         return listView;
     }
@@ -51,6 +62,7 @@ public class NewsListView extends Fragment
 
     private List<Map<String, Object>> favoriteList = new ArrayList<Map<String, Object>>();
 
+    private  int showNum = 3;
 
     public ListView getFavoriteListView(){
         return  favoriteListView;
@@ -77,12 +89,14 @@ public class NewsListView extends Fragment
             String sourceName = c.getString(8);
             int love = c.getInt(13);
             String newsId = c.getString(6);
+            long updateTime = Long.parseLong(c.getString(11));
             map.put("imageView1",image);
             map.put("textView1",title);
             map.put("sourceUrl",sourceUrl);
             map.put("sourceName",sourceName);
             map.put("love",love);
             map.put("newsId",newsId);
+            map.put("updateTime",updateTime);
             favoriteList.add(map);
         }
 
@@ -104,16 +118,35 @@ public class NewsListView extends Fragment
 
     public void init()
     {
-        listView = new ListView(context);
+        listView = new PullToRefreshListView(context);
+        listView.setMode(PullToRefreshBase.Mode.BOTH);
+        listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+
+
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                new GetDataTask().execute();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                new GetDataTask1().execute();
+
+            }
+        });
+
+
+
         mData = getData();
-        MyAdapter adapter = new MyAdapter(context,mData);
-        listView.setAdapter(adapter);
+        tabadapter = new MyAdapter(context,mData);
+        listView.setAdapter(tabadapter);
 
     }
 
     public List<Map<String, Object>> getList(){return list;}
 
     private List<Map<String,Object>> getData(){
+        mData.clear();
         Cursor newsCursor = Database.getInstance(context).query("news",null,"category=?",new String[]{category},null,null,null,null);
 
 
@@ -127,12 +160,14 @@ public class NewsListView extends Fragment
             String sourceName = newsCursor.getString(8);
             int love = newsCursor.getInt(13);
             String newsId = newsCursor.getString(6);
+            long updateTime = Long.parseLong(newsCursor.getString(11));
             map.put("imageView1",image);
             map.put("textView1",title);
             map.put("sourceUrl",sourceUrl);
             map.put("sourceName",sourceName);
             map.put("love",love);
             map.put("newsId",newsId);
+            map.put("updateTime",updateTime);
             list.add(map);
         }
         return list;
@@ -163,7 +198,8 @@ public class NewsListView extends Fragment
 
         @Override
         public int getCount() {
-            return data.size();
+            Log.d("fuck_data",data.size() + ":" + showNum + ":" + (data.size() > showNum?showNum:data.size()));
+            return data.size() > showNum?showNum:data.size();
         }
 
         @Override
@@ -191,6 +227,18 @@ public class NewsListView extends Fragment
                 holder = (ViewHolder)convertView.getTag();
             }
 
+            Log.d("fuck_data",data.size()+" 1");
+            Collections.sort(data, new Comparator<Map<String,Object>>() {
+                public int compare(Map<String,Object> arg0, Map<String,Object> arg1) {
+                    Long a = (Long)arg0.get("updateTime");
+                    Long b = (Long)arg1.get("updateTime");
+                    //Log.d("fuck_data",mData.size()+" 2");
+                    return b.compareTo(a);
+
+                }
+            });
+            Log.d("fuck_data",data.size()+" 3");
+
             holder.img.setImageBitmap((Bitmap)data.get(position).get("imageView1"));
             holder.title.setText((String)data.get(position).get("textView1"));
             holder.sourceUrl = (String)data.get(position).get("sourceUrl");
@@ -198,4 +246,67 @@ public class NewsListView extends Fragment
             return convertView;
         }
     }
+
+    private class GetDataTask extends AsyncTask<Void,Void,Vector<JSONNews>>{
+
+
+        @Override
+        protected Vector<JSONNews> doInBackground(Void... params) {
+            News n = new News();
+            n.setURL(category);
+            Thread thread = new Thread(n);
+            thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return n.getJsonNewsVector();
+        }
+
+        @Override
+        protected void onPostExecute(Vector<JSONNews> newsVector) {
+            super.onPostExecute(newsVector);
+            SQLiteDatabase db = Database.getInstance(getContext());
+            for(int i = 0;i < newsVector.size();i++)
+            {
+                JSONNews news = newsVector.get(i);
+                Cursor c = db.query("news",null,"newsId=?",new String[]{news.getNewsId()},null,null,null,null);
+                if(c.moveToFirst() == false)
+                {
+                    news.saveToDatabase(db);
+                    Log.d("fuck_save","query if");
+                }
+                else
+                    Log.d("fuck_save","query else in news");
+            }
+            mData = getData();
+
+            tabadapter.notifyDataSetChanged();
+            listView.onRefreshComplete();
+        }
+    }
+
+    private class GetDataTask1 extends AsyncTask<Void,Void,String>{
+
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            showNum += 3;
+            tabadapter.notifyDataSetChanged();
+            listView.onRefreshComplete();
+        }
+    }
+
 }

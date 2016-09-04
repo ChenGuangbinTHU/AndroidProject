@@ -15,6 +15,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -93,7 +96,7 @@ public class TabFragment extends Fragment {
 
         nlv.init();
 
-        ListView listView = nlv.getListView();
+        PullToRefreshListView listView = nlv.getListView();
 
         list = nlv.getList();
 
@@ -103,13 +106,15 @@ public class TabFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
+                Log.d("fuck_intent_",position+"");
+                position = position-1;
                 Intent intent = new Intent(getActivity(),WebNews.class);
                 intent.putExtra("sourceUrl",(String)list.get(position).get("sourceUrl"));
                 intent.putExtra("sourceName",(String)list.get(position).get("sourceName"));
                 intent.putExtra("love",(int)list.get(position).get("love"));
 
                 intent.putExtra("newsId",(String)list.get(position).get("newsId"));
-                Log.d("fuck_intent","here!");
+                Log.d("fuck_intent_",(String)list.get(position).get("sourceUrl"));
                 startActivity(intent);
             }
         });
