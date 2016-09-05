@@ -67,13 +67,13 @@ public class TabFragment extends Fragment {
         Thread thread = new Thread(n);
         thread.setPriority(9);
         thread.start();
-//        try {
-//
-//            thread.join();
-//        } catch (InterruptedException e) {
-//            Log.d("fuck","interrupted");
-//            e.printStackTrace();
-//        }
+        try {
+
+            thread.join();
+        } catch (InterruptedException e) {
+            Log.d("fuck","interrupted");
+            e.printStackTrace();
+        }
 
         LinearLayout ll = (LinearLayout)view.findViewById(R.id.tab_linear);
 

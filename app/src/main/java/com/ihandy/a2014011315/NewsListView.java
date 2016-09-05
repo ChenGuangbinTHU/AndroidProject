@@ -89,14 +89,13 @@ public class NewsListView extends Fragment
             String sourceName = c.getString(8);
             int love = c.getInt(13);
             String newsId = c.getString(6);
-            long updateTime = Long.parseLong(c.getString(11));
+            //long updateTime = Long.parseLong(c.getString(11));
             map.put("imageView1",image);
             map.put("textView1",title);
             map.put("sourceUrl",sourceUrl);
             map.put("sourceName",sourceName);
             map.put("love",love);
             map.put("newsId",newsId);
-            map.put("updateTime",updateTime);
             favoriteList.add(map);
         }
 
@@ -147,6 +146,9 @@ public class NewsListView extends Fragment
 
     private List<Map<String,Object>> getData(){
         mData.clear();
+
+        Log.d("fuck_category",category);
+
         Cursor newsCursor = Database.getInstance(context).query("news",null,"category=?",new String[]{category},null,null,null,null);
 
 
@@ -160,14 +162,14 @@ public class NewsListView extends Fragment
             String sourceName = newsCursor.getString(8);
             int love = newsCursor.getInt(13);
             String newsId = newsCursor.getString(6);
-            long updateTime = Long.parseLong(newsCursor.getString(11));
+            //long updateTime = Long.parseLong(newsCursor.getString(11));
             map.put("imageView1",image);
             map.put("textView1",title);
             map.put("sourceUrl",sourceUrl);
             map.put("sourceName",sourceName);
             map.put("love",love);
             map.put("newsId",newsId);
-            map.put("updateTime",updateTime);
+            //map.put("updateTime",updateTime);
             list.add(map);
         }
         return list;
@@ -227,17 +229,17 @@ public class NewsListView extends Fragment
                 holder = (ViewHolder)convertView.getTag();
             }
 
-            Log.d("fuck_data",data.size()+" 1");
-            Collections.sort(data, new Comparator<Map<String,Object>>() {
-                public int compare(Map<String,Object> arg0, Map<String,Object> arg1) {
-                    Long a = (Long)arg0.get("updateTime");
-                    Long b = (Long)arg1.get("updateTime");
-                    //Log.d("fuck_data",mData.size()+" 2");
-                    return b.compareTo(a);
-
-                }
-            });
-            Log.d("fuck_data",data.size()+" 3");
+//            Log.d("fuck_data",data.size()+" 1");
+//            Collections.sort(data, new Comparator<Map<String,Object>>() {
+//                public int compare(Map<String,Object> arg0, Map<String,Object> arg1) {
+//                    Long a = (Long)arg0.get("updateTime");
+//                    Long b = (Long)arg1.get("updateTime");
+//                    //Log.d("fuck_data",mData.size()+" 2");
+//                    return b.compareTo(a);
+//
+//                }
+//            });
+//            Log.d("fuck_data",data.size()+" 3");
 
             holder.img.setImageBitmap((Bitmap)data.get(position).get("imageView1"));
             holder.title.setText((String)data.get(position).get("textView1"));
@@ -267,7 +269,7 @@ public class NewsListView extends Fragment
         @Override
         protected void onPostExecute(Vector<JSONNews> newsVector) {
             super.onPostExecute(newsVector);
-            SQLiteDatabase db = Database.getInstance(getContext());
+            SQLiteDatabase db = Database.getInstance(getActivity());
             for(int i = 0;i < newsVector.size();i++)
             {
                 JSONNews news = newsVector.get(i);

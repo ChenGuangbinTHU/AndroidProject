@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Objects;
 import java.util.Vector;
 
 /**
@@ -41,6 +42,7 @@ public class News implements Runnable{
         this.category =category;
         try {
             url = new URL(base_url + category);
+            Log.d("fuck_url",base_url + category);
         } catch (MalformedURLException e) {
             Log.d("fuck","url problem");
             e.printStackTrace();
@@ -94,7 +96,7 @@ public class News implements Runnable{
 
                 Log.d("fuck_news",news.toString());
 
-                jsonNews.setNewsCategory(news.getString("category"));
+                jsonNews.setNewsCategory(category);
                 jsonNews.setNewsCountry(news.getString("country"));
                 jsonNews.setNewsFetchedTime(news.getLong("fetched_time"));
 
@@ -112,12 +114,23 @@ public class News implements Runnable{
                 jsonNews.setNewsLocaleCategory(news.getString("locale_category"));
                 jsonNews.setNewsOrigin(news.getString("origin"));
 
-                JSONObject jsonSource = news.getJSONObject("source");
-                jsonNews.setNewsSourceName(jsonSource.getString("name"));
-                jsonNews.setNewsSourceUrl(jsonSource.getString("url"));
+                if(news.isNull("source"))
+                {
+                    jsonNews.setNewsSourceName("");
+                    jsonNews.setNewsSourceUrl("");
+                    Log.d("fuck_json","null");
+                }
+                else
+                {
+                    JSONObject jsonSource = news.getJSONObject("source");
+                    jsonNews.setNewsSourceName(jsonSource.getString("name"));
+                    jsonNews.setNewsSourceUrl(jsonSource.getString("url"));
+                }
+
 
                 jsonNews.setNewsTitle(news.getString("title"));
-                jsonNews.setNewsUpdateTime(news.getLong("updated_time"));
+
+
 
                 jsonNewsVector.add(jsonNews);
             }

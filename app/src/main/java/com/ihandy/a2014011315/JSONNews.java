@@ -23,7 +23,7 @@ public class JSONNews {
     private String newsSourceUrl;
     private String newsTitle;
     private byte[] imageByte;
-    private long newsUpdateTime;
+    private String newsUpdateTime;
 
     public void setImageByte(byte[] imageByte){this.imageByte = imageByte;}
 
@@ -109,11 +109,11 @@ public class JSONNews {
         this.newsTitle = newsTitle;
     }
 
-    public long getNewsUpdateTime() {
+    public String getNewsUpdateTime() {
         return newsUpdateTime;
     }
 
-    public void setNewsUpdateTime(long newsUpdateTime) {
+    public void setNewsUpdateTime(String newsUpdateTime) {
         this.newsUpdateTime = newsUpdateTime;
     }
 

@@ -122,6 +122,8 @@ public class Database extends SQLiteOpenHelper implements Runnable{
     {
         Vector<String> newsTitle= new Vector<>();
         Cursor c = db.getReadableDatabase().query("category",null,"watch=?",new String[]{Integer.toString(1)},null,null,null,null);
+
+
         while(c.moveToNext())
         {
             String title = c.getString(2);
