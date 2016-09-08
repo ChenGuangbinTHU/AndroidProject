@@ -3,6 +3,7 @@ package com.ihandy.a2014011315;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +19,10 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+
+import java.util.Vector;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -58,8 +63,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);*/
         SQLiteDatabase db = Database.getInstance(this);
 
+        NewsClassify nc = new NewsClassify();
+        long longTime = System.currentTimeMillis();
+        String time = String.valueOf(longTime);
+        nc.setURL(time);
+        Thread t = new Thread(nc);
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+
+        Vector<String> watch = Database.getWatchNewsClassify();
+
+
+
+
+//        try {
+//
+//            thread.join();
+//        } catch (InterruptedException e) {
+//            Log.d("fuck","interrupted");
+//            e.printStackTrace();
+//        }
+        for(int i = 0;i < watch.size();i++)
+        {
+            News n = new News(getBaseContext());
+            n.setURL(watch.get(i));
+            Thread thread = new Thread(n);
+            thread.start();
+        }
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         setContentView(R.layout.activity_text);
+
+
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
         //getSupportActionBar().hide();

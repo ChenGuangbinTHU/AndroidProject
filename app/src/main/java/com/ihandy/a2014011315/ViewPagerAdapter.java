@@ -14,6 +14,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter{
 
     public ViewPagerAdapter(FragmentManager fm){
         super(fm);
+        /*
         NewsClassify n = new NewsClassify();
         long longTime = System.currentTimeMillis();
         String time = String.valueOf(longTime);
@@ -25,7 +26,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+        */
         Log.d("fuck","funish");
 
 

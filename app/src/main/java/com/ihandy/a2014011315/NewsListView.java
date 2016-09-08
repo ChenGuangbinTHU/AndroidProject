@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Looper;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -201,7 +202,7 @@ public class NewsListView extends Fragment
         @Override
         public int getCount() {
             Log.d("fuck_data",data.size() + ":" + showNum + ":" + (data.size() > showNum?showNum:data.size()));
-            return data.size() > showNum?showNum:data.size();
+            return data.size();
         }
 
         @Override
@@ -230,17 +231,17 @@ public class NewsListView extends Fragment
                 holder = (ViewHolder)convertView.getTag();
             }
 
-//            Log.d("fuck_data",data.size()+" 1");
-//            Collections.sort(data, new Comparator<Map<String,Object>>() {
-//                public int compare(Map<String,Object> arg0, Map<String,Object> arg1) {
-//                    Long a = (Long)arg0.get("updateTime");
-//                    Long b = (Long)arg1.get("updateTime");
-//                    //Log.d("fuck_data",mData.size()+" 2");
-//                    return b.compareTo(a);
-//
-//                }
-//            });
-//            Log.d("fuck_data",data.size()+" 3");
+            Log.d("fuck_data",data.size()+" 1");
+            Collections.sort(data, new Comparator<Map<String,Object>>() {
+                public int compare(Map<String,Object> arg0, Map<String,Object> arg1) {
+                    String a = (String)arg0.get("newsId");
+                    String b = (String)arg1.get("newsId");
+                    //Log.d("fuck_data",mData.size()+" 2");
+                    return b.compareTo(a);
+
+                }
+            });
+            Log.d("fuck_data",data.size()+" 3");
             String text = (String)data.get(position).get("textView1");
             if(((String)data.get(position).get("sourceName")).equals("") == false)
                 text =  text + '\n'+'\n'+(String)data.get(position).get("sourceName");
@@ -263,33 +264,41 @@ public class NewsListView extends Fragment
 
         @Override
         protected Vector<JSONNews> doInBackground(Void... params) {
-            News n = new News();
+//            News n = null;
+//            n = new News();
+            News n = new News(getActivity());
+//            //Looper.loop();
             n.setURL(category);
-            Thread thread = new Thread(n);
-            thread.start();
+            Thread t = new Thread(n);
+            t.start();
             try {
-                thread.join();
+                t.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+
             return n.getJsonNewsVector();
         }
 
         @Override
         protected void onPostExecute(Vector<JSONNews> newsVector) {
             super.onPostExecute(newsVector);
+            Log.d("fuck_news","onPost");
             SQLiteDatabase db = Database.getInstance(getActivity());
+
             for(int i = 0;i < newsVector.size();i++)
             {
                 JSONNews news = newsVector.get(i);
-                Cursor c = db.query("news",null,"newsId=?",new String[]{news.getNewsId()},null,null,null,null);
-                if(c.moveToFirst() == false)
-                {
-                    news.saveToDatabase(db);
-                    Log.d("fuck_save","query if");
-                }
-                else
-                    Log.d("fuck_save","query else in news");
+                news.saveToDatabase(db);
+//                Cursor c = db.query("news",null,"newsId=?",new String[]{news.getNewsId()},null,null,null,null);
+//                if(c.moveToFirst() == false)
+//                {
+//                    news.saveToDatabase(db);
+//                    Log.d("fuck_save","query if");
+//                }
+//                else
+//                    Log.d("fuck_save","query else in news");
             }
             mData = getData();
 
@@ -298,23 +307,55 @@ public class NewsListView extends Fragment
         }
     }
 
-    private class GetDataTask1 extends AsyncTask<Void,Void,String>{
+    private class GetDataTask1 extends AsyncTask<Void,Void,Vector<JSONNews>>{
 
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected Vector<JSONNews> doInBackground(Void... params) {
+            News n = new News(activity);
+
+            String url = "http://assignment.crazz.cn/news/query?locale=en&category="+category+"&max_news_is=" + mData.get(mData.size()-1).get("newsId");
+
+            Log.d("fuck_news",url);
+
+            n.setCompleteUrl(url);
+
+            Thread t = new Thread(n);
+            t.start();
             try {
-                Thread.sleep(1000);
+                t.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            return null;
+
+            Log.d("fuck_final","n.getJsonNewsVector():"+n.getJsonNewsVector().size()+"");
+
+            return n.getJsonNewsVector();
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            showNum += 3;
+        protected void onPostExecute(Vector<JSONNews> newsVector) {
+            super.onPostExecute(newsVector);
+            SQLiteDatabase db = Database.getInstance(getActivity());
+
+            for(int i = 0;i < newsVector.size();i++)
+            {
+
+                JSONNews news = newsVector.get(i);
+
+                Log.d("fuck_final",i + ":" + news.getNewsId());
+
+                news.saveToDatabase(db);
+            }
+
+            int ori_size = mData.size();
+
+            mData = getData();
+
+            int new_size = mData.size();
+
+            Log.d("fuck_news",ori_size + ":" + new_size);
+
             tabadapter.notifyDataSetChanged();
             listView.onRefreshComplete();
         }

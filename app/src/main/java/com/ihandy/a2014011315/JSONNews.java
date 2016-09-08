@@ -138,18 +138,19 @@ public class JSONNews {
         cv.put("title",newsTitle);
         cv.put("updateTime",String.valueOf(newsUpdateTime));
         cv.put("imgsUrl",newsImgsUrl[0]);
-        cv.put("imageByte",imageByte);
         cv.put("love",0);
+        byte[] imageByte = ImageByteOne.getImageByte(newsImgsUrl[0]);
+        cv.put("imageByte",imageByte);
 
         Cursor c = db.query("news",null,"newsId=?",new String[]{newsId},null,null,null,null);
 
         if(c.moveToFirst() == false)
         {
             db.insert("news",null,cv);
-            Log.d("fuck_save","query if");
+            Log.d("fuck_final","save " + newsId);
         }
         else
-            Log.d("fuck_save","query else");
+            Log.d("fuck_final","not save" + newsId);
 
 
     }

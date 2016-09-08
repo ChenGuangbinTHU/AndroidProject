@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
@@ -62,6 +63,9 @@ public class TabFragment extends Fragment {
             2、对于一个已经载入的界面，就可以使用Activiyt.findViewById()方法来获得其中的界面元素*/
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_page,container,false);
+
+        LinearLayout ll = (LinearLayout)view.findViewById(R.id.tab_linear);
+        /*
         n = new News();
         n.setURL(getArguments().getString("category"));
         Thread thread = new Thread(n);
@@ -75,7 +79,37 @@ public class TabFragment extends Fragment {
             e.printStackTrace();
         }
 
-        LinearLayout ll = (LinearLayout)view.findViewById(R.id.tab_linear);
+        Cursor c = Database.getInstance(getActivity()).query("news",null,"category=?",new String[]{getArguments().getString("category")},null,null,null,null);
+
+        int count = 0;
+
+        while(c.moveToNext())
+        {
+            if(count++ > 3)
+                break;
+        }
+
+        if(count <= 3)
+        {
+            Log.d("fuck_pro","pro begin");
+            ProgressBar pb = (ProgressBar)view.findViewById(R.id.progress);
+            pb.setVisibility(View.VISIBLE);
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            pb.setVisibility(View.INVISIBLE);
+            Log.d("fuck_pro","pro end");
+        }
+
+
+
+
+
+
+
+        ll.removeViewAt(0);
 
         newsVector = n.getJsonNewsVector();
         //TextView t = (TextView)view.findViewById(R.id.textView);
@@ -90,7 +124,7 @@ public class TabFragment extends Fragment {
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
-
+        */
         NewsListView nlv = new NewsListView(getActivity(),getArguments().getString("category"),ll.getContext());
         //ll.addView(nlv);
 

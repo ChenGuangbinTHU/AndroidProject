@@ -1,5 +1,9 @@
 package com.ihandy.a2014011315;
 
+import android.app.Activity;
+import android.content.Context;
+import android.database.Cursor;
+import android.os.Looper;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -21,6 +25,7 @@ public class News implements Runnable{
 
     private final String base_url = "http://assignment.crazz.cn/news/query?locale=en&category=";
 
+
     private URL url;
 
     private String result = "";
@@ -30,6 +35,14 @@ public class News implements Runnable{
     private Vector<JSONNews> jsonNewsVector = new Vector();
 
     private String test = "";
+
+    Context context;
+
+    News(Context activity)
+    {
+        this.context = activity;
+    }
+
 
 
     public Vector<JSONNews> getJsonNewsVector()
@@ -49,6 +62,15 @@ public class News implements Runnable{
         }
     }
 
+    public void setCompleteUrl(String url1)
+    {
+        try {
+            url = new URL(url1);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void getJsonNews()
     {
         try{
@@ -62,6 +84,8 @@ public class News implements Runnable{
             {
                 result += inputLine;
             }
+
+            Log.d("fuck_result",result);
 
             buffer.close();
 
@@ -96,6 +120,13 @@ public class News implements Runnable{
 
                 Log.d("fuck_news",news.toString());
 
+                jsonNews.setNewsId(news.getString("news_id"));
+                Cursor c = Database.getInstance(context).query("news",null,"newsId=?",new String[]{news.getString("news_id")},null,null,null,null);
+                if(c.moveToFirst() == true)
+                {
+                    continue;
+                }
+
                 jsonNews.setNewsCategory(category);
                 jsonNews.setNewsCountry(news.getString("country"));
                 jsonNews.setNewsFetchedTime(news.getLong("fetched_time"));
@@ -110,7 +141,7 @@ public class News implements Runnable{
                 }
                 jsonNews.setNewsImgsUrl(newImgsUrl);
 
-                jsonNews.setNewsId(news.getString("news_id"));
+
                 jsonNews.setNewsLocaleCategory(news.getString("locale_category"));
                 jsonNews.setNewsOrigin(news.getString("origin"));
 
@@ -131,8 +162,10 @@ public class News implements Runnable{
                 jsonNews.setNewsTitle(news.getString("title"));
 
 
-
+/*change
                 jsonNewsVector.add(jsonNews);
+                */
+                jsonNews.saveToDatabase(Database.getInstance(context));
             }
 
         } catch (JSONException e) {
@@ -160,5 +193,7 @@ public class News implements Runnable{
     public void run() {
         getJsonNews();
         parseJSONNews();
+
+
     }
 }
