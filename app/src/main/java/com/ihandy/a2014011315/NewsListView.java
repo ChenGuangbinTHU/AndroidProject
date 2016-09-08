@@ -224,6 +224,7 @@ public class NewsListView extends Fragment
                 convertView = mInflater.inflate(R.layout.news,null);
                 holder.img = (ImageView)convertView.findViewById(R.id.imageView1);
                 holder.title = (TextView)convertView.findViewById(R.id.textView1);
+                //holder.sourceName = (TextView)convertView.findViewById(R.id.textView_name);
                 convertView.setTag(holder);
             }else{
                 holder = (ViewHolder)convertView.getTag();
@@ -240,11 +241,19 @@ public class NewsListView extends Fragment
 //                }
 //            });
 //            Log.d("fuck_data",data.size()+" 3");
+            String text = (String)data.get(position).get("textView1");
+            if(((String)data.get(position).get("sourceName")).equals("") == false)
+                text =  text + '\n'+'\n'+(String)data.get(position).get("sourceName");
 
             holder.img.setImageBitmap((Bitmap)data.get(position).get("imageView1"));
-            holder.title.setText((String)data.get(position).get("textView1"));
+            holder.title.setText(text);
             holder.sourceUrl = (String)data.get(position).get("sourceUrl");
-            holder.sourceName = (String)data.get(position).get("sourceName");
+            //holder.sourceName.setText((String)data.get(position).get("sourceName"));
+
+//            String text = (String)data.get(position).get("textView1");
+//            if((String)data.get(position).get("sourceName") != "")
+//                text +=  + '\n'+'\n'+(String)data.get(position).get("sourceName");
+
             return convertView;
         }
     }

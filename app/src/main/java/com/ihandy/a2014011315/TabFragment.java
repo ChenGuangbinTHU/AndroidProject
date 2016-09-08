@@ -85,11 +85,11 @@ public class TabFragment extends Fragment {
         ImageByte ib = new ImageByte(getImgUrls(),newsVector);
         Thread t = new Thread(ib);
         t.start();
-        try {
-            t.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            t.join();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         NewsListView nlv = new NewsListView(getActivity(),getArguments().getString("category"),ll.getContext());
         //ll.addView(nlv);

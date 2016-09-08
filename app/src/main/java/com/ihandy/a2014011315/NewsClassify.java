@@ -121,10 +121,10 @@ public class NewsClassify extends Activity implements Runnable{
     public void run() {
         getJsonNewsClassify();
         parseJSONClassify();
-        for(int i = 0;i < classify.size();i++)
-        {
-            Log.d("fuck_classify",classify.get(i) + ":" + titles.get(i));
-        }
+//        for(int i = 0;i < classify.size();i++)
+//        {
+//            Log.d("fuck_classify",classify.get(i) + ":" + titles.get(i));
+//        }
         Log.d("fuck","解析成功");
     }
 }
