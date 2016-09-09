@@ -143,30 +143,31 @@ public class CategoryManager extends Activity{
 
             if(position == 0)
             {
-                Log.d("fuck_final_index",position+ ":"+"watch");
                 holder.title.setText("Watch");
+                holder.title.setTextColor(Color.rgb(255,0,0));
                 holder.img.setVisibility(View.INVISIBLE);
             }
             else if(position < watch.size()+1)
             {
-                Log.d("fuck_final_index",position+ ":"+watch.get(position-1));
                 holder.title.setText(watch.get(position-1));
-                holder.title.setTextColor(Color.rgb(0,255,0));
-                holder.img.setImageDrawable(getResources().getDrawable(R.mipmap.unwatch));
+                holder.title.setTextColor(Color.rgb(0,0,0));
+                holder.img.setImageDrawable(getResources().getDrawable(R.drawable.down));
+                holder.img.setAdjustViewBounds(true);
                 holder.img.setVisibility(View.VISIBLE);
             }
             else if(position == watch.size()+1)
             {
-                Log.d("fuck_final_index",position+ ":"+"unwatch");
                 holder.title.setText("Unwatch");
+                holder.title.setTextColor(Color.rgb(255,0,0));
                 holder.img.setVisibility(View.INVISIBLE);
+
             }
             else
             {
-                Log.d("fuck_final_index",position+ ":"+unwatch.get(position-2-watch.size()));
                 holder.title.setText(unwatch.get(position-2-watch.size()));
-                holder.title.setTextColor(Color.rgb(0,0,255));
-                holder.img.setImageDrawable(getResources().getDrawable(R.mipmap.watch));
+                holder.title.setTextColor(Color.rgb(0,0,0));
+                holder.img.setImageDrawable(getResources().getDrawable(R.drawable.up));
+                holder.img.setAdjustViewBounds(true);
                 holder.img.setVisibility(View.VISIBLE);
             }
 

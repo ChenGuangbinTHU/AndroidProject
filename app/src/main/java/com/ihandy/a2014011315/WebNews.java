@@ -128,7 +128,17 @@ public class WebNews extends Activity{
             }
         });
 
+        shareButton.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT,sourceUrl);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(Intent.createChooser(intent,getTitle()));
+            }
+        });
 
 
         Log.d("fuck_intent",sourceUrl);
