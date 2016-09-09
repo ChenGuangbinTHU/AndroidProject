@@ -89,19 +89,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //            Log.d("fuck","interrupted");
 //            e.printStackTrace();
 //        }
+
+        Thread[] threads = new Thread[20];
+
         for(int i = 0;i < watch.size();i++)
         {
             News n = new News(getBaseContext());
             n.setURL(watch.get(i));
-            Thread thread = new Thread(n);
-            thread.start();
+            threads[i] = new Thread(n);
+            threads[i].start();
         }
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        for(int i = 0;i < watch.size();i++)
+            try {
+                threads[i].join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
 
         setContentView(R.layout.activity_text);
 
@@ -116,6 +121,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewPager = (ViewPager)findViewById(R.id.view_pager);
 
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);

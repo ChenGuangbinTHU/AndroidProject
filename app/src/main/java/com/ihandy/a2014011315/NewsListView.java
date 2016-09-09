@@ -63,7 +63,7 @@ public class NewsListView extends Fragment
 
     private List<Map<String, Object>> favoriteList = new ArrayList<Map<String, Object>>();
 
-    private  int showNum = 3;
+    private  int showNum = 24;
 
     public ListView getFavoriteListView(){
         return  favoriteListView;
@@ -152,7 +152,7 @@ public class NewsListView extends Fragment
 
         Cursor newsCursor = Database.getInstance(context).query("news",null,"category=?",new String[]{category},null,null,null,null);
 
-
+int count = 0;
 
         while(newsCursor.moveToNext())
         {
@@ -163,6 +163,7 @@ public class NewsListView extends Fragment
             String sourceName = newsCursor.getString(8);
             int love = newsCursor.getInt(13);
             String newsId = newsCursor.getString(6);
+            Log.d("fuck_final_newsId",count++ + newsId);
             //long updateTime = Long.parseLong(newsCursor.getString(11));
             map.put("imageView1",image);
             map.put("textView1",title);
@@ -314,11 +315,11 @@ public class NewsListView extends Fragment
         protected Vector<JSONNews> doInBackground(Void... params) {
             News n = new News(activity);
 
-            String url = "http://assignment.crazz.cn/news/query?locale=en&category="+category+"&max_news_is=" + mData.get(mData.size()-1).get("newsId");
+            String url = "http://assignment.crazz.cn/news/query?locale=en&category="+category+"&max_news_id=" + mData.get(mData.size()-1).get("newsId");
 
             Log.d("fuck_news",url);
 
-            n.setCompleteUrl(url);
+            n.setCompleteUrl(url,category);
 
             Thread t = new Thread(n);
             t.start();
@@ -337,7 +338,7 @@ public class NewsListView extends Fragment
         protected void onPostExecute(Vector<JSONNews> newsVector) {
             super.onPostExecute(newsVector);
             SQLiteDatabase db = Database.getInstance(getActivity());
-
+            showNum += 10;
             for(int i = 0;i < newsVector.size();i++)
             {
 

@@ -62,8 +62,9 @@ public class News implements Runnable{
         }
     }
 
-    public void setCompleteUrl(String url1)
+    public void setCompleteUrl(String url1,String category)
     {
+        this.category = category;
         try {
             url = new URL(url1);
         } catch (MalformedURLException e) {
@@ -112,6 +113,9 @@ public class News implements Runnable{
 
             //Log.d("fuck_news",jsonArray.toString());
 
+            Log.d("fuck_final",jsonArray.toString());
+
+
             for(int i = 0;i < jsonArray.length();i++)
             {
                 JSONNews jsonNews = new JSONNews();
@@ -124,6 +128,7 @@ public class News implements Runnable{
                 Cursor c = Database.getInstance(context).query("news",null,"newsId=?",new String[]{news.getString("news_id")},null,null,null,null);
                 if(c.moveToFirst() == true)
                 {
+                    Log.d("fuck_news","exist:" + news.getString("news_id"));
                     continue;
                 }
 

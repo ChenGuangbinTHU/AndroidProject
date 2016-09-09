@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -59,25 +61,29 @@ public class CategoryManager extends Activity{
             {
                 if(position == 0 ||position == watch.size()+1)
                 {
-
+                    Log.d("fuck_final_index",position+ ":"+watch.size());
                 }
                 else if(position > 0 && position < watch.size()+1)
                 {
+                    Log.d("fuck_final_index",position+ ":"+watch.size());
                     String title = watch.get(position-1);
-                    unwatch.add(watch.remove(position-1));
+                    //unwatch.add(watch.remove(position-1));
                     ContentValues values = new ContentValues();
                     values.put("watch",0);
                     Database.getInstance(getBaseContext()).update("category",values,"title=?",new String[]{title});
                     watch = Database.getWatchNewsTitle();
+                    unwatch = Database.getUnWatchNewsTitle();
                 }
                 else if(position > watch.size()+1)
                 {
+                    Log.d("fuck_final_index",position+ ":"+watch.size());
                     String title = unwatch.get(position-2-watch.size());
-                    watch.add(unwatch.remove(position-2-watch.size()));
+                    //watch.add(unwatch.remove(position-2-watch.size()));
                     ContentValues values = new ContentValues();
                     values.put("watch",1);
                     Database.getInstance(getBaseContext()).update("category",values,"title=?",new String[]{title});
                     unwatch = Database.getUnWatchNewsTitle();
+                    watch = Database.getWatchNewsTitle();
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -122,8 +128,6 @@ public class CategoryManager extends Activity{
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder = null;
 
-
-
             if(convertView == null)
             {
                 holder = new ViewHolder();
@@ -139,23 +143,31 @@ public class CategoryManager extends Activity{
 
             if(position == 0)
             {
+                Log.d("fuck_final_index",position+ ":"+"watch");
                 holder.title.setText("Watch");
                 holder.img.setVisibility(View.INVISIBLE);
             }
+            else if(position < watch.size()+1)
+            {
+                Log.d("fuck_final_index",position+ ":"+watch.get(position-1));
+                holder.title.setText(watch.get(position-1));
+                holder.title.setTextColor(Color.rgb(0,255,0));
+                holder.img.setImageDrawable(getResources().getDrawable(R.mipmap.unwatch));
+                holder.img.setVisibility(View.VISIBLE);
+            }
             else if(position == watch.size()+1)
             {
+                Log.d("fuck_final_index",position+ ":"+"unwatch");
                 holder.title.setText("Unwatch");
                 holder.img.setVisibility(View.INVISIBLE);
             }
-            else if(position > 0 && position < watch.size()+1)
+            else
             {
-                holder.title.setText(watch.get(position-1));
-                holder.img.setImageDrawable(getResources().getDrawable(R.mipmap.unwatch));
-            }
-            else if(position > watch.size()+1)
-            {
-                holder.title.setText(watch.get(position-2-watch.size()));
+                Log.d("fuck_final_index",position+ ":"+unwatch.get(position-2-watch.size()));
+                holder.title.setText(unwatch.get(position-2-watch.size()));
+                holder.title.setTextColor(Color.rgb(0,0,255));
                 holder.img.setImageDrawable(getResources().getDrawable(R.mipmap.watch));
+                holder.img.setVisibility(View.VISIBLE);
             }
 
             return convertView;
