@@ -74,7 +74,7 @@ public class NewsListView extends Fragment
     }
 
 
-    public void initFavorateListView(Context context)
+    public void initFavorateListView(Context context)//初始化FavoriteNews.java中的上拉下拉列表
     {
         favoriteListView = new ListView(context);
 
@@ -116,18 +116,18 @@ public class NewsListView extends Fragment
 
     NewsListView(){};
 
-    public void init()
+    public void init()//初始化ViewPager中的上拉下拉列表
     {
         listView = new PullToRefreshListView(context);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
 
-
+            //下拉时获取最新新闻
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 new GetDataTask().execute();
             }
-
+            //上拉时获取newsID最小的新闻之前的新闻
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 new GetDataTask1().execute();
@@ -145,14 +145,12 @@ public class NewsListView extends Fragment
 
     public List<Map<String, Object>> getList(){return list;}
 
+    //从数据库读取该分类下所有新闻
     private List<Map<String,Object>> getData(){
         mData.clear();
-
-        Log.d("fuck_category",category);
-
         Cursor newsCursor = Database.getInstance(context).query("news",null,"category=?",new String[]{category},null,null,null,null);
 
-int count = 0;
+        int count = 0;
 
         while(newsCursor.moveToNext())
         {
@@ -163,7 +161,6 @@ int count = 0;
             String sourceName = newsCursor.getString(8);
             int love = newsCursor.getInt(13);
             String newsId = newsCursor.getString(6);
-            Log.d("fuck_final_newsId",count++ + newsId);
             //long updateTime = Long.parseLong(newsCursor.getString(11));
             map.put("imageView1",image);
             map.put("textView1",title);
@@ -202,7 +199,6 @@ int count = 0;
 
         @Override
         public int getCount() {
-            Log.d("fuck_data",data.size() + ":" + showNum + ":" + (data.size() > showNum?showNum:data.size()));
             return data.size();
         }
 
@@ -232,17 +228,15 @@ int count = 0;
                 holder = (ViewHolder)convertView.getTag();
             }
 
-            Log.d("fuck_data",data.size()+" 1");
+            //按照NewsId进行排序
             Collections.sort(data, new Comparator<Map<String,Object>>() {
                 public int compare(Map<String,Object> arg0, Map<String,Object> arg1) {
                     String a = (String)arg0.get("newsId");
                     String b = (String)arg1.get("newsId");
-                    //Log.d("fuck_data",mData.size()+" 2");
                     return b.compareTo(a);
 
                 }
             });
-            Log.d("fuck_data",data.size()+" 3");
             String text = (String)data.get(position).get("textView1");
             if(((String)data.get(position).get("sourceName")).equals("") == false)
                 text =  text + '\n'+'\n'+(String)data.get(position).get("sourceName");
@@ -250,25 +244,19 @@ int count = 0;
             holder.img.setImageBitmap((Bitmap)data.get(position).get("imageView1"));
             holder.title.setText(text);
             holder.sourceUrl = (String)data.get(position).get("sourceUrl");
-            //holder.sourceName.setText((String)data.get(position).get("sourceName"));
 
-//            String text = (String)data.get(position).get("textView1");
-//            if((String)data.get(position).get("sourceName") != "")
-//                text +=  + '\n'+'\n'+(String)data.get(position).get("sourceName");
 
             return convertView;
         }
     }
 
+    //异步获取，用于上拉刷新
     private class GetDataTask extends AsyncTask<Void,Void,Vector<JSONNews>>{
 
 
         @Override
         protected Vector<JSONNews> doInBackground(Void... params) {
-//            News n = null;
-//            n = new News();
             News n = new News(getActivity());
-//            //Looper.loop();
             n.setURL(category);
             Thread t = new Thread(n);
             t.start();
@@ -285,28 +273,23 @@ int count = 0;
         @Override
         protected void onPostExecute(Vector<JSONNews> newsVector) {
             super.onPostExecute(newsVector);
-            Log.d("fuck_news","onPost");
+
+
             SQLiteDatabase db = Database.getInstance(getActivity());
 
             for(int i = 0;i < newsVector.size();i++)
             {
                 JSONNews news = newsVector.get(i);
                 news.saveToDatabase(db);
-//                Cursor c = db.query("news",null,"newsId=?",new String[]{news.getNewsId()},null,null,null,null);
-//                if(c.moveToFirst() == false)
-//                {
-//                    news.saveToDatabase(db);
-//                    Log.d("fuck_save","query if");
-//                }
-//                else
-//                    Log.d("fuck_save","query else in news");
             }
             mData = getData();
 
             tabadapter.notifyDataSetChanged();
             listView.onRefreshComplete();
+            Toast.makeText(activity,"Refresh Success",Toast.LENGTH_SHORT).show();
         }
     }
+    //异步获取，用于下拉刷新
 
     private class GetDataTask1 extends AsyncTask<Void,Void,Vector<JSONNews>>{
 
@@ -317,7 +300,7 @@ int count = 0;
 
             String url = "http://assignment.crazz.cn/news/query?locale=en&category="+category+"&max_news_id=" + mData.get(mData.size()-1).get("newsId");
 
-            Log.d("fuck_news",url);
+
 
             n.setCompleteUrl(url,category);
 
@@ -329,7 +312,7 @@ int count = 0;
                 e.printStackTrace();
             }
 
-            Log.d("fuck_final","n.getJsonNewsVector():"+n.getJsonNewsVector().size()+"");
+
 
             return n.getJsonNewsVector();
         }
@@ -344,7 +327,6 @@ int count = 0;
 
                 JSONNews news = newsVector.get(i);
 
-                Log.d("fuck_final",i + ":" + news.getNewsId());
 
                 news.saveToDatabase(db);
             }
@@ -355,7 +337,7 @@ int count = 0;
 
             int new_size = mData.size();
 
-            Log.d("fuck_news",ori_size + ":" + new_size);
+
 
             tabadapter.notifyDataSetChanged();
             listView.onRefreshComplete();

@@ -70,20 +70,13 @@ public class ImageByte extends Activity implements Runnable
     public void run() {
         //imageByte = getImageByte(url);
 
-        for(int i = 0;i < urls.length;i++)
-        {
-            Log.d("fuck_debug",i + ":" + urls[i]);
-        }
 
         for(int i = 0;i < urls.length;i++)
         {
             byte[] b = getImageByte(urls[i]);
-            //imageByteVector.add(b);
-            //Log.d("fuck",i + ":" + b.toString());
             JSONNews news = newsVector.get(i);
             news.setImageByte(b);
             news.saveToDatabase(Database.getInstance(this));
-            Log.d("fuck_save",String.valueOf(news.getNewsId()));
         }
     }
 

@@ -124,7 +124,7 @@ public class JSONNews {
         return s;
     }
 
-    public void saveToDatabase(SQLiteDatabase db)
+    public void saveToDatabase(SQLiteDatabase db)//将新闻保存到数据库
     {
         ContentValues cv = new ContentValues();
         cv.put("category",newsCategory);
@@ -147,10 +147,9 @@ public class JSONNews {
         if(c.moveToFirst() == false)
         {
             db.insert("news",null,cv);
-            Log.d("fuck_final","save " + newsId);
+
         }
-        else
-            Log.d("fuck_final","not save" + newsId);
+
 
 
     }

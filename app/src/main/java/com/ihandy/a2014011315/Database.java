@@ -19,7 +19,7 @@ public class Database extends SQLiteOpenHelper implements Runnable{
 
     private static Database db;
 
-    public static SQLiteDatabase getInstance(Context context)
+    public static SQLiteDatabase getInstance(Context context)//使用单例模式获取数据库
     {
         if(db == null)
         {
@@ -61,7 +61,6 @@ public class Database extends SQLiteOpenHelper implements Runnable{
             ")");
 
         } catch (Exception e) {
-            Log.d("fuck_sqlite","fail");
             e.printStackTrace();
         }
     }
@@ -73,10 +72,12 @@ public class Database extends SQLiteOpenHelper implements Runnable{
 
     }
 
+    //将创建news和category表的操作放在线程中执行
     @Override
     public void run() {
         try {
-            db.getReadableDatabase().execSQL("create table  if not exists news(id integer primary key," +
+            db.getReadableDatabase().execSQL(
+                    "create table  if not exists news(id integer primary key," +
                     "category text," +
                     "country text," +
                     "fetchedTime text, " +
@@ -92,21 +93,20 @@ public class Database extends SQLiteOpenHelper implements Runnable{
                     "love integer" +
                     ")");
 
-            db.getReadableDatabase().execSQL("create table  if not exists category(id integer primary key," +
+            db.getReadableDatabase().execSQL(
+                    "create table  if not exists category(id integer primary key," +
                     "category text," +
                     "title text," +
                     "watch integer" +
                     ")");
-            Log.d("fuck","finish create");
+
 
         } catch (Exception e) {
-            Log.d("fuck_sqlite","fail");
             e.printStackTrace();
-            Log.d("fuck_sqlite",e.toString());
         }
     }
 
-    public static Vector<String> getWatchNewsClassify()
+    public static Vector<String> getWatchNewsClassify()//获取可以观看的classify
     {
         Vector<String> newsClassify = new Vector<>();
         Cursor c = db.getReadableDatabase().query("category",null,"watch=?",new String[]{Integer.toString(1)},null,null,null,null);
@@ -118,7 +118,7 @@ public class Database extends SQLiteOpenHelper implements Runnable{
         return newsClassify;
     }
 
-    public static Vector<String> getWatchNewsTitle()
+    public static Vector<String> getWatchNewsTitle()//获取可以观看的title
     {
         Vector<String> newsTitle= new Vector<>();
         Cursor c = db.getReadableDatabase().query("category",null,"watch=?",new String[]{Integer.toString(1)},null,null,null,null);
@@ -132,7 +132,7 @@ public class Database extends SQLiteOpenHelper implements Runnable{
         return newsTitle;
     }
 
-    public static Vector<String> getUnWatchNewsTitle()
+    public static Vector<String> getUnWatchNewsTitle()//获取不可以观看的title
     {
         Vector<String> newsTitle= new Vector<>();
         Cursor c = db.getReadableDatabase().query("category",null,"watch=?",new String[]{Integer.toString(0)},null,null,null,null);

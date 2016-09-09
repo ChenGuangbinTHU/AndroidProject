@@ -24,44 +24,7 @@ import java.util.Map;
 public class FavoriteNews extends Activity{
 
     List<Map<String, Object>> list;
-/*    @Override
 
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_page,container,false);
-
-        LinearLayout ll = (LinearLayout)view.findViewById(R.id.tab_linear);
-
-
-
-        NewsListView nlv = new NewsListView();
-
-        nlv.initFavorateListView(getBaseContext());
-
-        ListView listView = nlv.getFavoriteListView();
-
-        list = nlv.getFavoriteList();
-
-        listView.setOnItemClickListener(new ListView.OnItemClickListener()
-        {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                Intent intent = new Intent(getBaseContext(),WebNews.class);
-                intent.putExtra("sourceUrl",(String)list.get(position).get("sourceUrl"));
-                intent.putExtra("sourceName",(String)list.get(position).get("sourceName"));
-                intent.putExtra("love",(int)list.get(position).get("love"));
-
-                intent.putExtra("newsId",(String)list.get(position).get("newsId"));
-                Log.d("fuck_intent","here!");
-                startActivity(intent);
-            }
-        });
-
-        ll.addView(listView);
-        return view;
-    }
-*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +40,7 @@ public class FavoriteNews extends Activity{
                 finish();
             }
         });
-
+        toolbar.setTitle("Favorite");
         ll.addView(toolbar);
 
         NewsListView nlv = new NewsListView();
@@ -88,6 +51,7 @@ public class FavoriteNews extends Activity{
 
         list = nlv.getFavoriteList();
 
+        //设置监听，点击时跳转到新闻详情
         listView.setOnItemClickListener(new ListView.OnItemClickListener()
         {
 
@@ -100,7 +64,6 @@ public class FavoriteNews extends Activity{
                 intent.putExtra("love",(int)list.get(position).get("love"));
 
                 intent.putExtra("newsId",(String)list.get(position).get("newsId"));
-                Log.d("fuck_intent","here!");
                 startActivity(intent);
             }
         });
@@ -108,6 +71,7 @@ public class FavoriteNews extends Activity{
         ll.addView(listView);
     }
 
+    //当从新闻详情返回到收藏新闻页面时，如果新闻取消收藏则需要进行更新
     @Override
     protected void onResume() {
         super.onResume();
@@ -146,7 +110,6 @@ public class FavoriteNews extends Activity{
                 intent.putExtra("love",(int)list.get(position).get("love"));
 
                 intent.putExtra("newsId",(String)list.get(position).get("newsId"));
-                Log.d("fuck_intent","here!");
                 startActivity(intent);
             }
         });

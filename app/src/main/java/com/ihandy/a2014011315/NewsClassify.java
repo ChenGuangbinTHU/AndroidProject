@@ -38,7 +38,7 @@ public class NewsClassify extends Activity implements Runnable{
 
     }
 
-    public void getJsonNewsClassify()
+    public void getJsonNewsClassify()//获取JSON新闻分类
     {
         try{
             result = "";
@@ -76,11 +76,9 @@ public class NewsClassify extends Activity implements Runnable{
     }
 
 
-    void parseJSONClassify()
+    void parseJSONClassify()//解析JSON新闻分类并保存
     {
         try {
-            Log.d("fuck",result);
-
             jsonObject = new JSONObject(result);
             JSONObject jsonCategories = jsonObject.getJSONObject("data");
             JSONObject jsonTitle = jsonCategories.getJSONObject("categories");
@@ -90,9 +88,7 @@ public class NewsClassify extends Activity implements Runnable{
             {
                 String key = (String)it.next();
                 classify.add(key);
-                //Log.d("fuck_title",str);
                 String value = jsonTitle.getString(key);
-                //Log.d("fuck_title",value);
                 titles.add(value);
                 ContentValues cv = new ContentValues();
                 cv.put("category",key);
@@ -103,15 +99,12 @@ public class NewsClassify extends Activity implements Runnable{
                 if(c.moveToFirst() == false)
                 {
                     db.insert("category",null,cv);
-                    Log.d("fuck_save","query if category");
                 }
-                else
-                    Log.d("fuck_save","query else category");
+
 
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d("fuck","you");
         }
 
     }
@@ -121,10 +114,6 @@ public class NewsClassify extends Activity implements Runnable{
     public void run() {
         getJsonNewsClassify();
         parseJSONClassify();
-//        for(int i = 0;i < classify.size();i++)
-//        {
-//            Log.d("fuck_classify",classify.get(i) + ":" + titles.get(i));
-//        }
-        Log.d("fuck","解析成功");
+
     }
 }

@@ -15,6 +15,7 @@ public class AboutMe extends Activity{
         setContentView(R.layout.about_me);
         Toolbar toolbar = (Toolbar)findViewById(R.id.aboutmebar);
         toolbar.setNavigationIcon(R.mipmap.back);
+        toolbar.setTitle("About Me");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

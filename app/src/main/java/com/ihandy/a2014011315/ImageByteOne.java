@@ -18,8 +18,6 @@ import java.util.Vector;
  */
 public class ImageByteOne extends Activity
 {
-
-
     private String url;
 
     JSONNews news;
@@ -30,7 +28,7 @@ public class ImageByteOne extends Activity
     }
 
 
-    public static byte[] getImageByte(String url1)
+    public static byte[] getImageByte(String url1)//获得二进制形式的图片
     {
         URL url = null;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -55,14 +53,13 @@ public class ImageByteOne extends Activity
     }
 
     public void runIt() {
-        Log.d("fuck_debug",url);
         byte[] b = getImageByte(url);
         news.setImageByte(b);
         news.saveToDatabase(Database.getInstance(this));
-        Log.d("fuck_save",String.valueOf(news.getNewsId()));
 
     }
 
+    //将二进制图片转化为Bitmap
     public static Bitmap getBitmapFromByte(byte[] temp){
         if(temp != null){
             Bitmap bitmap = BitmapFactory.decodeByteArray(temp, 0, temp.length);

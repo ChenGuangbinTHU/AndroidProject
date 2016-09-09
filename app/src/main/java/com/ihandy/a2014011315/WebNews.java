@@ -47,7 +47,6 @@ public class WebNews extends Activity{
             loveNow = c.getInt(13);
         }
 
-        Log.d("fuck_intent","loveNew:" + loveNow);
 
         if(loveNow == 0)
         {
@@ -67,23 +66,20 @@ public class WebNews extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d("fuck_intent","oncreate");
         setContentView(R.layout.web_view);
         intent = getIntent();
         sourceUrl = intent.getStringExtra("sourceUrl");
         sourceName = intent.getStringExtra("sourceName");
         love = intent.getIntExtra("love",-1);
-        Log.d("fuck_intent","love:" + love);
         newsId = intent.getStringExtra("newsId");
         WebView wb = (WebView)findViewById(R.id.webView);
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
 
-        //Log.d("fuck_intent",sourceUrl);
 
         loveButton = (ImageButton)findViewById(R.id.love);
         shareButton = (ImageButton)findViewById(R.id.share);
 
-
+        //根据是否为收藏来判断loveButton的图片
         if(love == 0)
         {
             loveButton.setImageDrawable(getResources().getDrawable(R.mipmap.love));
@@ -106,6 +102,7 @@ public class WebNews extends Activity{
             }
         });
 
+        //设置收藏监听
         loveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,6 +125,7 @@ public class WebNews extends Activity{
             }
         });
 
+        //设置分享监听
         shareButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -141,7 +139,6 @@ public class WebNews extends Activity{
         });
 
 
-        Log.d("fuck_intent",sourceUrl);
         wb.loadUrl(sourceUrl);
 
         wb.setWebViewClient(new WebViewClient(){

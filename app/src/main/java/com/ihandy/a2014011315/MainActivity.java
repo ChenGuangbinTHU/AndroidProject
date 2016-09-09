@@ -34,40 +34,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-/*
-        SQLiteDatabase db = Database.getInstance(this);
 
-        getSupportActionBar().hide();
-
-        setContentView(R.layout.activity_text);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
-        setSupportActionBar(toolbar);
-
-        tabLayout = (TabLayout)findViewById(R.id.tabs);
-        viewPager = (ViewPager)findViewById(R.id.view_pager);
-
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-
-        viewPager.setAdapter(viewPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);*/
-        SQLiteDatabase db = Database.getInstance(this);
+        SQLiteDatabase db = Database.getInstance(this);//初始化数据库
 
         NewsClassify nc = new NewsClassify();
         long longTime = System.currentTimeMillis();
         String time = String.valueOf(longTime);
         nc.setURL(time);
-        Thread t = new Thread(nc);
+        Thread t = new Thread(nc);//获取新闻分类的线程
         t.start();
         try {
             t.join();
@@ -80,18 +54,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Vector<String> watch = Database.getWatchNewsClassify();
 
 
-
-
-//        try {
-//
-//            thread.join();
-//        } catch (InterruptedException e) {
-//            Log.d("fuck","interrupted");
-//            e.printStackTrace();
-//        }
-
         Thread[] threads = new Thread[20];
-
+        //获取新闻的线程，有多少个分类就同时开启多少个线程来进行获取
         for(int i = 0;i < watch.size();i++)
         {
             News n = new News(getBaseContext());
@@ -110,9 +74,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setContentView(R.layout.activity_text);
 
-
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
         //getSupportActionBar().hide();
@@ -121,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewPager = (ViewPager)findViewById(R.id.view_pager);
 
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        //设置监听，当从category manager设置完后返回时进行更新
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -166,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
 
         } else if (id == R.id.about_me) {
-            Log.d("fuck_nav","send");
             Intent intent= new Intent(getBaseContext(),AboutMe.class);
             startActivity(intent);
         }

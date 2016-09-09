@@ -55,9 +55,8 @@ public class News implements Runnable{
         this.category =category;
         try {
             url = new URL(base_url + category);
-            Log.d("fuck_url",base_url + category);
+
         } catch (MalformedURLException e) {
-            Log.d("fuck","url problem");
             e.printStackTrace();
         }
     }
@@ -72,10 +71,9 @@ public class News implements Runnable{
         }
     }
 
-    public void getJsonNews()
+    public void getJsonNews()//获取JSON格式的新闻
     {
         try{
-            Log.d("fuck_url",url.toString());
             result = "";
             URLConnection tc = url.openConnection();
             BufferedReader buffer = new BufferedReader(new InputStreamReader(tc.getInputStream()));
@@ -86,23 +84,22 @@ public class News implements Runnable{
                 result += inputLine;
             }
 
-            Log.d("fuck_result",result);
+
 
             buffer.close();
 
-            //tc.disconnect();???
 
 
         } catch (MalformedURLException e) {
-            Log.d("fuck","Malformed");
+
             e.printStackTrace();
         } catch (IOException e) {
-            Log.d("fuck","IO in news");
+
             e.printStackTrace();
         }
     }
 
-    public void parseJSONNews()
+    public void parseJSONNews()//解析JSON格式的新闻并且保存
     {
         try {
             JSONObject jsonObject = new JSONObject(result);
@@ -111,9 +108,7 @@ public class News implements Runnable{
 
             JSONArray jsonArray = jsonData.getJSONArray("news");
 
-            //Log.d("fuck_news",jsonArray.toString());
 
-            Log.d("fuck_final",jsonArray.toString());
 
 
             for(int i = 0;i < jsonArray.length();i++)
@@ -122,13 +117,12 @@ public class News implements Runnable{
 
                 JSONObject news =  jsonArray.getJSONObject(i);
 
-                Log.d("fuck_news",news.toString());
+
 
                 jsonNews.setNewsId(news.getString("news_id"));
                 Cursor c = Database.getInstance(context).query("news",null,"newsId=?",new String[]{news.getString("news_id")},null,null,null,null);
                 if(c.moveToFirst() == true)
                 {
-                    Log.d("fuck_news","exist:" + news.getString("news_id"));
                     continue;
                 }
 
@@ -154,7 +148,7 @@ public class News implements Runnable{
                 {
                     jsonNews.setNewsSourceName("");
                     jsonNews.setNewsSourceUrl("");
-                    Log.d("fuck_json","null");
+
                 }
                 else
                 {
@@ -174,7 +168,6 @@ public class News implements Runnable{
             }
 
         } catch (JSONException e) {
-            Log.d("fuck","json error");
             e.printStackTrace();
         }
 

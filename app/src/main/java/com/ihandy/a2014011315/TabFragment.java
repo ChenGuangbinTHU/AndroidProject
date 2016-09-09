@@ -58,77 +58,15 @@ public class TabFragment extends Fragment {
 
     @Nullable
     @Override
-/*
-    对于一个没有被载入或者想要动态载入的界面，都需要使用LayoutInflater.inflate()来载入；
-            2、对于一个已经载入的界面，就可以使用Activiyt.findViewById()方法来获得其中的界面元素*/
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_page,container,false);
 
         LinearLayout ll = (LinearLayout)view.findViewById(R.id.tab_linear);
-        /*
-        n = new News();
-        n.setURL(getArguments().getString("category"));
-        Thread thread = new Thread(n);
-        thread.setPriority(9);
-        thread.start();
-        try {
 
-            thread.join();
-        } catch (InterruptedException e) {
-            Log.d("fuck","interrupted");
-            e.printStackTrace();
-        }
-
-        Cursor c = Database.getInstance(getActivity()).query("news",null,"category=?",new String[]{getArguments().getString("category")},null,null,null,null);
-
-        int count = 0;
-
-        while(c.moveToNext())
-        {
-            if(count++ > 3)
-                break;
-        }
-
-        if(count <= 3)
-        {
-            Log.d("fuck_pro","pro begin");
-            ProgressBar pb = (ProgressBar)view.findViewById(R.id.progress);
-            pb.setVisibility(View.VISIBLE);
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            pb.setVisibility(View.INVISIBLE);
-            Log.d("fuck_pro","pro end");
-        }
-
-
-
-
-
-
-
-        ll.removeViewAt(0);
-
-        newsVector = n.getJsonNewsVector();
-        //TextView t = (TextView)view.findViewById(R.id.textView);
-
-        //t.setText(n.test());
-
-        ImageByte ib = new ImageByte(getImgUrls(),newsVector);
-        Thread t = new Thread(ib);
-        t.start();
-//        try {
-//            t.join();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-        */
         NewsListView nlv = new NewsListView(getActivity(),getArguments().getString("category"),ll.getContext());
         //ll.addView(nlv);
 
-        nlv.init();
+        nlv.init();//初始化上拉下拉刷新列表
 
         PullToRefreshListView listView = nlv.getListView();
 
@@ -140,7 +78,6 @@ public class TabFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                Log.d("fuck_intent_",position+"");
                 position = position-1;
                 Intent intent = new Intent(getActivity(),WebNews.class);
                 intent.putExtra("sourceUrl",(String)list.get(position).get("sourceUrl"));
@@ -148,7 +85,6 @@ public class TabFragment extends Fragment {
                 intent.putExtra("love",(int)list.get(position).get("love"));
 
                 intent.putExtra("newsId",(String)list.get(position).get("newsId"));
-                Log.d("fuck_intent_",(String)list.get(position).get("sourceUrl"));
                 startActivity(intent);
             }
         });

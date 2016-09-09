@@ -15,20 +15,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     public ViewPagerAdapter(FragmentManager fm){
         super(fm);
-        /*
-        NewsClassify n = new NewsClassify();
-        long longTime = System.currentTimeMillis();
-        String time = String.valueOf(longTime);
-        n.setURL(time);
-        Thread t = new Thread(n);
-        t.start();
-        try {
-            t.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        */
-        Log.d("fuck","funish");
+
 
 
         for(int i = 0;i < Database.getWatchNewsTitle().size();i++)

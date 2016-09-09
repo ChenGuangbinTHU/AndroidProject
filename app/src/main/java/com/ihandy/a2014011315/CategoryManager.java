@@ -30,30 +30,34 @@ import java.util.Vector;
 public class CategoryManager extends Activity{
     private ListView listView;
 
-    private Vector<String> watch;
+    private Vector<String> watch;//保存观看分类
 
-    private Vector<String> unwatch;
+    private Vector<String> unwatch;//保存未观看分类
 
     MyAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        watch = Database.getWatchNewsTitle();
 
+        //从数据库的category表中读取分类
+        watch = Database.getWatchNewsTitle();
         unwatch = Database.getUnWatchNewsTitle();
         setContentView(R.layout.categoty_manage);
         listView = (ListView)findViewById(R.id.manage_list);
         adapter = new MyAdapter(getBaseContext());
         listView.setAdapter(adapter);
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_category);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_category);//设置菜单栏
         toolbar.setNavigationIcon(R.mipmap.back);
+        toolbar.setTitle("Categoty Manager");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+
+        //设置监听，根据点击不同的位置判断是观看的分类还是未观看的分类来进行移除和添加
         listView.setOnItemClickListener(new ListView.OnItemClickListener()
         {
             @Override
@@ -61,13 +65,11 @@ public class CategoryManager extends Activity{
             {
                 if(position == 0 ||position == watch.size()+1)
                 {
-                    Log.d("fuck_final_index",position+ ":"+watch.size());
+
                 }
                 else if(position > 0 && position < watch.size()+1)
                 {
-                    Log.d("fuck_final_index",position+ ":"+watch.size());
                     String title = watch.get(position-1);
-                    //unwatch.add(watch.remove(position-1));
                     ContentValues values = new ContentValues();
                     values.put("watch",0);
                     Database.getInstance(getBaseContext()).update("category",values,"title=?",new String[]{title});
@@ -76,9 +78,7 @@ public class CategoryManager extends Activity{
                 }
                 else if(position > watch.size()+1)
                 {
-                    Log.d("fuck_final_index",position+ ":"+watch.size());
                     String title = unwatch.get(position-2-watch.size());
-                    //watch.add(unwatch.remove(position-2-watch.size()));
                     ContentValues values = new ContentValues();
                     values.put("watch",1);
                     Database.getInstance(getBaseContext()).update("category",values,"title=?",new String[]{title});
@@ -140,7 +140,7 @@ public class CategoryManager extends Activity{
                 holder = (ViewHolder)convertView.getTag();
             }
 
-
+            //根据不同的位置来渲染不同的效果
             if(position == 0)
             {
                 holder.title.setText("Watch");
